@@ -1,0 +1,20 @@
+[package]
+name = "sqlite-toml-vtab"
+version = "0.1.0"
+edition = "2021"
+
+# [lib]
+# name = "toml_vtab"
+# crate-type = ["cdylib", "lib"]
+
+[dependencies]
+anyhow = "1"
+# rusqlite = { version = "0.28.0", features = ["bundled", "functions", "vtab", "load_extension"] }
+rusqlite = { version = "0.28.0", features = ["bundled", "vtab"], default-features = false }
+serde_json = "1"
+thiserror = "1"
+toml = "0.7"
+walkdir = "2.3"
+
+[dev-dependencies]
+fallible-iterator = "0.2"
