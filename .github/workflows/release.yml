@@ -1,0 +1,40 @@
+name: release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    name: ${{ matrix.job.os }} (${{ matrix.job.target }})
+    runs-on: ${{ matrix.job.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { artifact_name: toml_vtab.so, os: ubuntu-latest, target: x86_64-unknown-linux-musl }
+          # - { artifact_name: toml_vtab.so, os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          - { artifact_name: toml_vtab.dylib, os: macos-latest, target: x86_64-apple-darwin }
+          - { artifact_name: toml_vtab.exe, os: windows-latest, target: x86_64-pc-windows-gnu }
+    steps:
+    - name: Install prerequisites
+      shell: bash
+      run: |
+        case ${{ matrix.job.target }} in
+          x86_64-unknown-linux-musl) sudo apt-get -y update ; sudo apt-get -y install musl-tools ;;
+        esac
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: stable
+        targets: ${{ matrix.job.target }}
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Build
+      run: cargo build --release --target=${{ matrix.job.target }}
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/${{ matrix.job.target }}/release/${{ matrix.job.artifact_name }}
+        asset_name: ${{ matrix.job.target }}_${{ matrix.job.artifact_name }}
+        tag: ${{ github.ref }}
