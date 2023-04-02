@@ -59,6 +59,12 @@ SELECT DISTINCT
 FROM
     recipe, json_each(json_extract(recipe.value, '$.ingredients')) AS ingredient
 ORDER BY ingredient_name
+
+## Check the extension version
+
+```sql
+SELECT toml_version();
+```
 ```
 
 

@@ -1,17 +1,30 @@
 use crate::reader::read_data;
 use crate::types::{Headers, Records};
-use sqlite_loadable::{api, define_virtual_table};
-use sqlite_loadable::prelude::*;
 use sqlite_loadable::table::{IndexInfo, VTab, VTabArguments, VTabCursor};
 use sqlite_loadable::vtab_argparse::{parse_argument, Argument, ConfigOptionValue};
+use sqlite_loadable::{api, define_virtual_table};
+use sqlite_loadable::{define_scalar_function, prelude::*};
 use sqlite_loadable::{BestIndexError, Error, Result};
 use std::path::Path;
 use std::{mem, os::raw::c_int};
 
-
 #[sqlite_entrypoint]
 pub fn sqlite3_tomlvtab_init(db: *mut sqlite3) -> Result<()> {
     define_virtual_table::<TomlTable>(db, "toml", None)?;
+    define_scalar_function(
+        db,
+        "toml_version",
+        0,
+        toml_version,
+        FunctionFlags::DETERMINISTIC,
+    )?;
+
+    Ok(())
+}
+
+fn toml_version(context: *mut sqlite3_context, _values: &[*mut sqlite3_value]) -> Result<()> {
+    let blurb = format!("v{}", env!("CARGO_PKG_VERSION"));
+    api::result_text(context, blurb)?;
 
     Ok(())
 }
