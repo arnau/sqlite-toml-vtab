@@ -5,7 +5,7 @@
 use rusqlite::ffi;
 use rusqlite::types::Null;
 use rusqlite::vtab::{
-    escape_double_quote, parameter, read_only_module, Context, CreateVTab, IndexInfo, VTab,
+    parameter, read_only_module, Context, CreateVTab, IndexInfo, VTab,
     VTabConfig, VTabConnection, VTabCursor, VTabKind, Values,
 };
 use rusqlite::{Connection, Error, Result};
@@ -13,7 +13,6 @@ use std::marker::PhantomData;
 use std::os::raw::c_int;
 use std::path::Path;
 use std::str;
-use walkdir::WalkDir;
 use crate::reader::read_data;
 use crate::types::{Headers, Records};
 
