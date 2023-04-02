@@ -6,6 +6,7 @@ on:
       - 'v*'
 jobs:
   build:
+    permissions: write-all
     name: ${{ matrix.job.os }} (${{ matrix.job.target }})
     runs-on: ${{ matrix.job.os }}
     strategy:
@@ -38,3 +39,4 @@ jobs:
         file: target/${{ matrix.job.target }}/release/${{ matrix.job.artifact_name }}
         asset_name: ${{ matrix.job.target }}_${{ matrix.job.artifact_name }}
         tag: ${{ github.ref }}
+        overwrite: true
