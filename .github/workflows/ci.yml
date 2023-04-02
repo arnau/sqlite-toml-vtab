@@ -1,0 +1,21 @@
+name: ci
+on: [workflow_dispatch, push, pull_request]
+jobs:
+  ci:
+    name: CI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [stable, beta]
+        os: [ubuntu-latest, macOS-latest]
+    steps:
+    - name: Setup Just
+      uses: extractions/setup-just@v1
+    - uses: hecrj/setup-rust-action@v1
+      with:
+        rust-version: ${{ matrix.rust }}
+        # targets: ${{ matrix.os }}
+    - name: Checkout
+      uses: actions/checkout@v3
+    - run: just test

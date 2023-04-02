@@ -23,4 +23,4 @@ test_dist: build clean_dist
 
 # Runs cargo test building the artefact first so it can be loaded by integration tests.
 test: test_dist
-  cargo test
+  cargo test --features rlib
