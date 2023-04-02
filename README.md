@@ -2,12 +2,17 @@
 
 A SQLite extension exposing [TOML](https://toml.io/) files as a virtual table.
 
-WARNING: This extension is a toy project and you should not expect any active maintenance.
+WARNING: This extension is a toy project and you should not expect any active
+maintenance. It depends on [sqlite-loadable-rs](https://github.com/asg017/sqlite-loadable-rs)
+which is unstable.
+
+Using the feature `rlib` the extension can be used as a rust lib, loadable using [rusqlite](https://github.com/rusqlite/rusqlite).
 
 
 ## Getting started
 
-The examples below assume a set of TOML files containing a recipe each with a shape such as:
+The examples below assume a set of TOML files containing a recipe each with a
+shape such as:
 
 ```toml
 name = "Yorkshire pudding"
@@ -30,16 +35,18 @@ ingredients = [
 Assuming the compiled name is `toml_vtab`:
 
  ```sql
- .load ./libtoml_vtab.dylib
+ .load ./dist/toml_vtab
 ```
 
 ### Initialise a virtual table
 
 ```sql
-CREATE VIRTUAL TABLE recipe USING toml(dirname="recipes");
+CREATE VIRTUAL TABLE temp.recipe USING toml(dirname="recipes");
  ```
 
-The above will create a new table `recipe` with two columns `filename` and `value` where the latter will have the full contents of the TOML file as a JSON string.
+The above will create a new table `recipe` within the `temp` schema with two
+columns `filename` and `value` where the latter will have the full contents of
+the TOML file as a JSON string.
 
 
 ## Querying the data
