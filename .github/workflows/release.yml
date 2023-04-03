@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         job:
-          - { artifact_name: libtoml_vtab.so, os: ubuntu-latest, target: x86_64-unknown-linux-musl }
-          # - { artifact_name: toml_vtab.so, os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
+          # - { artifact_name: libtoml_vtab.a, os: ubuntu-latest, target: x86_64-unknown-linux-musl }
+          - { artifact_name: toml_vtab.so, os: ubuntu-latest, target: x86_64-unknown-linux-gnu }
           - { artifact_name: libtoml_vtab.dylib, os: macos-latest, target: x86_64-apple-darwin }
           - { artifact_name: libtoml_vtab.dll, os: windows-latest, target: x86_64-pc-windows-gnu }
     steps:
@@ -37,6 +37,6 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: target/${{ matrix.job.target }}/release/${{ matrix.job.artifact_name }}
-        asset_name: ${{ matrix.job.target }}_${{ matrix.job.artifact_name }}
+        asset_name: ${{ matrix.job.artifact_name }}_${{ matrix.job.target }}
         tag: ${{ github.ref }}
         overwrite: true
